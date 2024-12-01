@@ -3,6 +3,9 @@ _envops:
   keep_trailing_newline: true
 _subdirectory: template
 _templates_suffix: .jinja
+_jinja_extensions:
+  - copier_templates_extensions.TemplateExtensionLoader
+  - extensions.py:ContextUpdater
 _tasks:
   - "[ -d .git ] || git init"
   - "{% if initial_commit %}git add .{% endif %}"
@@ -32,38 +35,13 @@ minmum_python_version:
 maximum_python_version:
   type: str
   help: Maximum support Python version
-  default: "3.10"
+  default: "3.11"
   choices:
-    - "3.8":
-      "value": "3.8"
-      "validator": >-
-        {% if '3.8' is version_lt(minimum_python_version) %}
-        Must be greater than minimum version {{ minimum_python_version }}
-        {% endif %}
-    - "3.9":
-      "value": "3.9"
-      "validator": >-
-        {% if '3.9' is version_lt(minimum_python_version) %}
-        Must be greater than minimum version {{ minimum_python_version }}
-        {% endif %}
-    - "3.10":
-      "value": "3.10"
-      "validator": >-
-        {% if '3.10' is version_lt(minimum_python_version) %}
-        Must be greater than minimum version {{ minimum_python_version }}
-        {% endif %}
-    - "3.11":
-      "value": "3.11"
-      "validator": >-
-        {% if '3.11' is version_lt(minimum_python_version) %}
-        Must be greater than minimum version {{ minimum_python_version }}
-        {% endif %}
-    - "3.12":
-      "value": "3.12"
-      "validator": >-
-        {% if '3.12' is version_lt(minimum_python_version) %}
-        Must be greater than minimum version {{ minimum_python_version }}
-        {% endif %}
+    - "3.9"
+    - "3.10"
+    - "3.11"
+    - "3.12"
+    - "3.13"
 
 initial_commit:
   type: bool
