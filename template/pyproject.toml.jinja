@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "{{ python_package_distribution_name }}"
 description = " {{ project_description | replace('"', "'") }}"
 readme = "README.md"
-requires-python = ">={{ minimum_python_version }},<{{ (maximum_python_version | versionize).next_minor_version() }}"
+requires-python = ">={{ minimum_python_version }},<{{ maximum_python_version  }}"
 dependencies = []
 
 
