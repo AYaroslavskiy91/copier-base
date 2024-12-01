@@ -9,58 +9,53 @@ readme = "README.md"
 requires-python = ">={{ minimum_python_version }},<{{ (maximum_python_version | versionize).next_minor_version() }}"
 dependencies = []
 
-[tool.hatch.version]
-path = "src/{{ python_package_import_name }}/__about__.py"
 
-[tool.hatch.env]
-requires = ["hatch-pip-compile"]
+[tool.uv]
+# Tell uv to ignore constraints on the main package.
+# This is needed when the current project doesn't have Git tags (fork, CI).
+override-dependencies = ["{{ python_package_distribution_name }}"]
+sources = { {{ python_package_distribution_name }} = { workspace = true } }
 
-[tool.hatch.envs.default]
-type = "pip-compile"
-lock-filename = ".requirements/requirements-{env_name}.txt"
-pip-compile-install-args = [ "--compile", ]
-pip-compile-installer = "uv"
-pip-compile-resolver = "uv"
+[project.optional-dependencies]
+plot = [
+  "matplotlib>=3.6.3",
+  "panel>=1.5",
+  "hvplot>=0.11",
+]
+ds = [
+"pandas>=2.2",
+"numpy>=2.1",
+]
 
+[dependency-groups]
+lint = [
+    "ruff>=0.4",
+]
+dev = [
+ipykernel
+]
+
+[project.scripts]
 {% if jupyter_notebooks %}
-[tool.hatch.envs.interactive]
-dependencies = [
-	"ipykernel",
-	"jupyter-core",
-	]
-
-[tool.hatch.envs.interactive.scripts]
-install = """\
-	python -m ipykernel install --user \
+install-kernel = """\
+	uv sync && \
+	uv run ipython kernel install --user \
 	--name={{ python_package_import_name }} \
 	--display-name='Python {{ minimum_python_version }} / {{ project_name }}' \
 	"""
-uninstall = "jupyter kernelspec uninstall {{ python_package_import_name }}"
 {% endif %}
-
 {% if linter %}
-[tool.hatch.envs.lint]
-dependencies = ["pre-commit~=3.7"]
-detached = true
-python = "{{ maximum_python_version }}"
-type = "pip-compile"
-lock-filename = ".requirements/requirements-{env_name}.txt"
-pip-compile_install-args = [
-	"--compile",
-	]
-pip-compile-installer = "uv"
-pip-compile-resolver = "uv"
-
-[tool.hatch.envs.lint.scripts]
-install = ["pre-commit install --install-hooks {args}"]
-reinstall = [
+install-lint = ["pre-commit install --install-hooks {args}"]
+reinstall-lint = [
 	"pre-commit uninstall && pre-commit clean && pre-commit gc",
 	"install",
 	]
-run = ["pre-commit run {args}"]
-run-all = ["pre-commit run --all-files {args}"]
-update = ["pre-commit autoupdate {args}"]
+run-lint = ["pre-commit run {args}"]
+run-all-lint = ["pre-commit run --all-files {args}"]
+update-lint = ["pre-commit autoupdate {args}"]
+{% endif %}
 
+{% if linter %}
 [tool.ruff]
 extend-exclude [".*"]
 force-exclude = true
