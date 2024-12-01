@@ -5,7 +5,7 @@ _subdirectory: template
 _templates_suffix: .jinja
 _jinja_extensions:
   - copier_templates_extensions.TemplateExtensionLoader
-  - extensions.py:ContextUpdater
+  - extensions/context.py:ContextUpdater
 _tasks:
   - "[ -d .git ] || git init"
   - "{% if initial_commit %}git add .{% endif %}"
