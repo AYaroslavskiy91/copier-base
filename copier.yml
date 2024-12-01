@@ -1,12 +1,10 @@
 _min_copier_Version: "9.2.0"
 _envops:
   keep_trailing_newline: true
-_subdirectory: project
+_subdirectory: template
 _templates_suffix: .jinja
 _jinja_extensions:
   - copier_templates_extensions.TemplateExtensionLoader
-  - extensions.py:ContextUpdater
-  - extensions.py:PythonVersionExtension
 _tasks:
   - "[ -d .git ] || git init"
   - "{% if initial_commit %}git add .{% endif %}"
